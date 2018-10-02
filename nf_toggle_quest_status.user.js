@@ -16,6 +16,8 @@
     setTimeout(() => {
         document.querySelectorAll('.qh-right .qh-rect img').forEach(checkmark => {
             count++;
+            checkmark.title = 'Toggle status';
+            checkmark.alt = 'Toggle status';
             checkmark.onclick = () => {
                 console.log('click');
             };
