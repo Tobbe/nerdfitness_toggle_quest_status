@@ -14,14 +14,23 @@
     let count = 0;
 
     setTimeout(() => {
-        document.querySelectorAll('.qh-right .qh-rect img').forEach(checkmark => {
-            count++;
-            checkmark.title = 'Toggle status';
-            checkmark.alt = 'Toggle status';
-            checkmark.onclick = () => {
-                console.log('click');
-            };
-        });
+        document.querySelectorAll('.qh-right .qh-rect img')
+            .forEach(checkmark => {
+                count++;
+                checkmark.title = 'Toggle status';
+                checkmark.alt = 'Toggle status';
+                checkmark.addEventListener('click', event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    const toggleButton = checkmark
+                        .closest('.quests-quests-block')
+                        .querySelector('div.qh-complete');
+                    toggleButton.click();
+
+                    return false;
+                }, true);
+            });
 
         console.log('found', count, 'checkmarks');
     }, 3000);
