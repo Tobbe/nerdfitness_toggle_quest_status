@@ -6,16 +6,25 @@
 // @license      MIT
 // @author       Tobbe
 // @match        https://www.nerdfitness.com/level-up/my-quests/
-// @grant        none
+// @grant        unsafeWindow
 // ==/UserScript==
+
+const URL_START = 'https://www.nerdfitness.com/wp-admin/admin-ajax.php' +
+    '?action=alm_query_posts&query_type=standard';
 
 (function() {
     'use strict';
     let count = 0;
 
-    setTimeout(() => {
+    function addClickListeners() {
         document.querySelectorAll('.qh-right .qh-rect img')
             .forEach(checkmark => {
+                if (checkmark.title === 'Toggle status') {
+                    // Already processed this checkmark
+                    // Don't want to add another click event listener
+                    return;
+                }
+
                 count++;
                 checkmark.title = 'Toggle status';
                 checkmark.alt = 'Toggle status';
@@ -33,5 +42,14 @@
             });
 
         console.log('found', count, 'checkmarks');
-    }, 3000);
+        count = 0;
+    }
+
+    unsafeWindow
+        .jQuery(document)
+        .ajaxComplete((event, jqXHR, ajaxOptions) => {
+            if (ajaxOptions.url.startsWith(URL_START)) {
+                addClickListeners();
+            }
+        });
 })();
